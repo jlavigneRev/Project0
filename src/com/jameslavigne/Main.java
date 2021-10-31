@@ -1,5 +1,9 @@
 package com.jameslavigne;
 
+/**
+ * @author James Lavigne
+ * Revature Project0 : Banking App
+ */
 public class Main {
 
     public static void main(String[] args) {

@@ -2,6 +2,9 @@ package com.jameslavigne;
 
 import java.util.Scanner;
 
+/**
+ * @author James Lavigne
+ */
 public class Menu {
     public static Scanner scanner = new Scanner(System.in);
 

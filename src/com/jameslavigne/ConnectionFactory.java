@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * @author James Lavigne
+ * ConnectionFactory for connecting to bank databse
+ */
 public class ConnectionFactory {
     private static Connection connection = null;
 

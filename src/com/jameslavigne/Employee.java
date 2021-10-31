@@ -1,5 +1,8 @@
 package com.jameslavigne;
 
+/**
+ * @author James Lavigne
+ */
 public class Employee {
     private int empId;
     private String username;

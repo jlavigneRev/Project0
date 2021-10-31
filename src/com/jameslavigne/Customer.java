@@ -1,5 +1,8 @@
 package com.jameslavigne;
 
+/**
+ * @author James Lavigne
+ */
 public class Customer {
     private int custId;
     private String username;
