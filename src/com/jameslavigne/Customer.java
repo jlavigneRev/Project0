@@ -7,16 +7,14 @@ public class Customer {
     private int custId;
     private String username;
     private String password;
-    private boolean approved;
     private String name;
 
     public Customer(){}
 
-    public Customer(int custId, String username, String password, boolean approved, String name) {
+    public Customer(int custId, String username, String password, String name) {
         this.custId = custId;
         this.username = username;
         this.password = password;
-        this.approved = approved;
         this.name = name;
     }
 
@@ -42,14 +40,6 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
     }
 
     public String getName() {

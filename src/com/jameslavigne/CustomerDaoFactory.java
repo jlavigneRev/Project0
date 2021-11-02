@@ -8,7 +8,7 @@ public class CustomerDaoFactory {
 
     private CustomerDaoFactory(){}
 
-    public CustomerDao getCustomerDao(){
+    public static CustomerDao getCustomerDao(){
         if(dao == null)
             dao = new CustomerDaoImp();
         return dao;

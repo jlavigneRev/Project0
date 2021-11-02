@@ -5,15 +5,19 @@ package com.jameslavigne;
  * Data Access Object for Customers
  */
 public interface CustomerDao {
-    void addCustomer(Employee employee);
+    void addCustomer(Customer customer);
 
-    void updateCustomer(int id, Employee employee);
+    void updateCustomer(int id, Customer customer);
 
     void deleteCustomer(int id);
 
-    Employee getEmployeeById(int id);
+    Employee getCustomerById(int id);
 
-    Employee getEmployeeByUsername(String username);
+    Employee getCustomerByUsername(String username);
 
-    boolean validEmployeeLogin(Employee employee);
+    int login(String username);
+
+    boolean validCustomerLogin(String username, String password);
+
+    boolean isApporved(int id);
 }

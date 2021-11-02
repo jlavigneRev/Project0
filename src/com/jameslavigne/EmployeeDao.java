@@ -11,5 +11,5 @@ public interface EmployeeDao {
 
     Employee getEmployeeById(int id);
 
-    boolean validCustomerLogin(Employee employee);
+    boolean validEmployeeLogin(String username, String password);
 }

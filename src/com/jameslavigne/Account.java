@@ -7,13 +7,15 @@ public class Account {
     private int accId;
     private int custId;
     private double balance;
+    private boolean approved;
 
     public Account(){}
 
-    public Account(int accId, int custId, double balance) {
+    public Account(int accId, int custId, double balance, boolean approved) {
         this.accId = accId;
         this.custId = custId;
         this.balance = balance;
+        this.approved = approved;
     }
 
     public int getAccId() {
@@ -38,5 +40,13 @@ public class Account {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }
