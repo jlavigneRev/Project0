@@ -6,10 +6,11 @@ package com.jameslavigne;
 public class AccountDaoFactory {
     private static AccountDao dao = null;
 
-    private AccountDaoFactory(){}
+    private AccountDaoFactory() {
+    }
 
-    public static AccountDao getAccountDao(){
-        if(dao == null)
+    public static AccountDao getAccountDao() {
+        if (dao == null)
             dao = new AccountDaoImp();
         return dao;
     }

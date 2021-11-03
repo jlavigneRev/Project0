@@ -5,9 +5,6 @@ package com.jameslavigne;
  * Data Access object for Employees
  */
 public interface EmployeeDao {
-    void addEmployee(Employee employee);
-
-    Employee getEmployeeByUsername(String username);
 
     Employee getEmployeeById(int id);
 

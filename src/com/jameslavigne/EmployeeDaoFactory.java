@@ -6,10 +6,11 @@ package com.jameslavigne;
 public class EmployeeDaoFactory {
     private static EmployeeDao dao = null;
 
-    private EmployeeDaoFactory(){}
+    private EmployeeDaoFactory() {
+    }
 
-    public static EmployeeDao getEmployeeDao(){
-        if(dao == null)
+    public static EmployeeDao getEmployeeDao() {
+        if (dao == null)
             dao = new EmployeeDaoImp();
         return dao;
     }

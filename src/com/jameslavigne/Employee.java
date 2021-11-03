@@ -9,7 +9,8 @@ public class Employee {
     private String password;
     private String name;
 
-    public Employee(){}
+    public Employee() {
+    }
 
     public Employee(int empId, String username, String password, String name) {
         this.empId = empId;

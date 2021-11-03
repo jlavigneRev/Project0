@@ -13,7 +13,8 @@ public class Transaction {
     private Date date;
     private boolean pending;
 
-    public Transaction(){}
+    public Transaction() {
+    }
 
     public Transaction(int tranId, int sourceId, int destId, double amount, Date date, boolean pending) {
         this.tranId = tranId;
@@ -70,5 +71,17 @@ public class Transaction {
 
     public void setPending(boolean pending) {
         this.pending = pending;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "tranId=" + tranId +
+                ", sourceId=" + sourceId +
+                ", destId=" + destId +
+                ", amount=" + amount +
+                ", date=" + date +
+                ", pending=" + pending +
+                '}';
     }
 }

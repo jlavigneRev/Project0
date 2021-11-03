@@ -5,20 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class EmployeeDaoImp implements EmployeeDao{
+public class EmployeeDaoImp implements EmployeeDao {
     Connection connection;
 
-    public EmployeeDaoImp(){
+    public EmployeeDaoImp() {
         this.connection = ConnectionFactory.getConnection();
-    }
-
-    @Override
-    public void addEmployee(Employee employee) {
-    }
-
-    @Override
-    public Employee getEmployeeByUsername(String username) {
-        return null;
     }
 
     @Override
@@ -31,10 +22,10 @@ public class EmployeeDaoImp implements EmployeeDao{
         String sql = "SELECT * FROM employee WHERE username = ? AND password = ? LIMIT 1";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,username);
+            preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
             ResultSet results = preparedStatement.executeQuery();
-            if(results.next()){
+            if (results.next()) {
                 //valid credentials
                 return true;
             } else {

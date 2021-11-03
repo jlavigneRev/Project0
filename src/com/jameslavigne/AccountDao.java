@@ -9,21 +9,17 @@ import java.util.List;
 public interface AccountDao {
     void addAccount(Account account);
 
-    double getBalance(int id);
-
     Account getAccountById(int id);
 
     List<Account> getAccountsByCustId(int cust_id);
 
-    List<Account> getUserAccounts(String username);
-
     List<Account> getPendingAccounts();
 
-    void updateAccount(int id, Account account);
+    boolean deposit(int id, double amount);
 
-    boolean deposit(int id, Double amount);
+    boolean withdraw(int id, double amount);
 
-    boolean withdraw(int id, Double amount);
+    boolean transfer(int srcId, int destId, double amount);
 
     void approveAccount(int id);
 

@@ -14,14 +14,17 @@ public class Menu {
     public static DecimalFormat df = new DecimalFormat("0.00");
 
     //console colors
-    public static String normalText = "\033[0m";
-    public static String redText = "\033[0;31m";
+    public static final String ANSI_NORMAL = "\033[0m";
+    public static final String ANSI_RED = "\033[0;31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
 
     private Menu() {
     }
 
     /**
      * Gets user input for menu selection
+     *
      * @param max Number of choices listed in menu
      * @return number selected by user
      */
@@ -34,64 +37,81 @@ public class Menu {
                     //valid number
                     return input;
                 }
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+                //e.printStackTrace();
+            }
             System.out.println("Please, Enter a valid selection from (1-" + max + ")");
         }
     }
 
-    public static String getUsernameInput(){
+    public static String getUsernameInput() {
         System.out.print("Enter your username: ");
         String username = scanner.nextLine();
         return username;
     }
 
-    public static String getPasswordInput(){
+    public static String getPasswordInput() {
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
         return password;
     }
 
-    public static String getNameInput(){
+    public static String getNameInput() {
         System.out.print("Enter your name:");
         String name = scanner.nextLine();
         return name;
 
     }
 
-    public static double getMoneyAmount(){
-        while(true) {
+    public static double getMoneyAmount(double max) {
+        while (true) {
             try {
                 String input = scanner.nextLine();
                 double amount = Double.parseDouble(input);
-                if(amount > 0)
+                if (amount > 0 && amount <= max)
                     return amount;
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+            }
             System.out.println("Please Enter a Valid Amount.");
         }
     }
 
-    public static int getIAccdInput(){
-        System.out.print("Enter Account the ID:");
-        while(true) {
+    public static int getAccIdInput() {
+        System.out.print("Enter the Account ID:");
+        while (true) {
             try {
                 String input = scanner.nextLine();
                 int id = Integer.parseInt(input);
                 return id;
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             System.out.println("Please enter a valid ID number.");
         }
     }
 
-    public static Customer getInputCustomer(){
+    public static int getCustIdInput() {
+        System.out.print("Enter the Customer ID:");
+        while (true) {
+            try {
+                String input = scanner.nextLine();
+                int id = Integer.parseInt(input);
+                return id;
+            } catch (NumberFormatException e) {
+                //e.printStackTrace();
+            }
+            System.out.println("Please enter a valid ID number.");
+        }
+    }
+
+    public static Customer getInputCustomer() {
         Customer customer = new Customer(0, getUsernameInput(), getPasswordInput(), getNameInput());
         return customer;
     }
 
     public static void printStartMenu() {
         System.out.println("*********************************************");
-        System.out.println("Hello, Welcome to the Bank Login Portal!");
+        System.out.println(ANSI_CYAN + "Hello, Welcome to the Bank Login Portal!" + ANSI_NORMAL);
         System.out.println("Please choose an option listed below (1-3):");
         System.out.println("Enter 1. Login");
         System.out.println("Enter 2. Create New User");
@@ -99,32 +119,32 @@ public class Menu {
         System.out.println("********************************************");
     }
 
-    public static void printLoginMenu(){
+    public static void printLoginMenu() {
         System.out.println("********************************************");
         System.out.println("Please enter your login credentials below.");
     }
 
-    public static void printCustomerMenu(String username, List<Account> accounts){
+    public static void printCustomerMenu(String username, List<Account> accounts) {
         System.out.println("********************************************");
-        System.out.println("Welcome " + username + "!");
+        System.out.println(ANSI_CYAN + "Welcome " + username + "!" + ANSI_NORMAL);
         int listSize = 0;
-        if(accounts != null) {
+        if (accounts != null) {
             listSize = accounts.size();
         }
-        System.out.println("Please choose an option listed below. (1-" + (listSize+3) + "):");
+        System.out.println("Please choose an option listed below. (1-" + (listSize + 3) + "):");
         for (int i = 0; i < listSize; i++) {
-            if(accounts.get(i).isApproved()) {
-                System.out.println("Enter " + (i+1) + ". View Account ID #" + accounts.get(i).getAccId());
+            if (accounts.get(i).isApproved()) {
+                System.out.println("Enter " + (i + 1) + ". View Account ID #" + accounts.get(i).getAccId() + " - $" + accounts.get(i).getBalance());
             } else {
-                System.out.println("Enter " + (i+1) + ". Account #" + accounts.get(i).getAccId() + " is waiting for approval");
+                System.out.println(ANSI_YELLOW + "Enter " + (i + 1) + ". Account ID #" + accounts.get(i).getAccId() + " is waiting for approval" + ANSI_NORMAL);
             }
         }
-        System.out.println("Enter " + (listSize+1) + ". Open New Bank Account");
-        System.out.println("Enter " + (listSize+2) + ". Logout");
-        System.out.println("Enter " + (listSize+3) + ". Exit");
+        System.out.println("Enter " + (listSize + 1) + ". Open New Bank Account");
+        System.out.println("Enter " + (listSize + 2) + ". Logout");
+        System.out.println("Enter " + (listSize + 3) + ". Exit");
     }
 
-    public static void printAccountMenu(Account account){
+    public static void printAccountMenu(Account account) {
         System.out.println("********************************************");
         printAccountInfo(account);
         System.out.println("Enter 1. Deposit to account");
@@ -135,28 +155,52 @@ public class Menu {
         System.out.println("Enter 6. Exit");
     }
 
-    public static void printAccountInfo(Account account){
+    public static void printAccountInfo(Account account) {
         System.out.println("Getting your account info...");
-        System.out.println("--------------------------------");
+        System.out.println(ANSI_CYAN + "--------------------------------");
         System.out.println("Account ID #" + account.getAccId());
-        if(account.isApproved())
+        if (account.isApproved())
             System.out.println("Current Balance: $" + df.format(account.getBalance()));
         else
             System.out.println("Please contact an employee for the approval of this account.");
-        System.out.println("--------------------------------");
+        System.out.println("--------------------------------" + ANSI_NORMAL);
     }
 
-    public static void printDeposit(){
+    //Employee view of account
+    public static void viewAccount(Account account) {
+        System.out.println(ANSI_CYAN + "Account ID #" + account.getAccId() + " - Owner ID #" + account.getCustId() +
+                " - Balance: $" + account.getBalance() + " - Approved: " + account.isApproved() + ANSI_NORMAL);
+    }
+
+    public static void printDeposit() {
         System.out.print("Enter an amount to deposit: $");
     }
 
-    public static void printWithdraw(){
+    public static void printWithdraw() {
         System.out.print("Enter an amount to withdraw: $");
     }
 
-    public static void printEmployeeMenu(String username){
+    public static void printCreateNewTransfer() {
+        System.out.println("Creating a new Transfer Offer...");
+    }
+
+    public static void printPendingTransactions(List<Transaction> transactions) {
         System.out.println("******************************************");
-        System.out.println("Welcome " + username + "!");
+        System.out.println("Getting Pending Transfer Requests...");
+        for (int i = 0; i < transactions.size(); i++) {
+            Transaction tran = transactions.get(i);
+            System.out.println("Enter " + (i + 1) + ". $" + tran.getAmount() + " from Account ID #" + tran.getSourceId());
+        }
+    }
+
+    public static void printApprovedDenyChoice() {
+        System.out.println("Enter 1. Approve Transaction");
+        System.out.println("Enter 2. Deny Transaction");
+    }
+
+    public static void printEmployeeMenu(String username) {
+        System.out.println("******************************************");
+        System.out.println(ANSI_CYAN + "Welcome " + username + "!" + ANSI_NORMAL);
         System.out.println("Please choose an option listed below. (1-5)");
         System.out.println("Enter 1. View Accounts");
         System.out.println("Enter 2. Approve/Deny Accounts");
@@ -165,25 +209,33 @@ public class Menu {
         System.out.println("Enter 5. Exit");
     }
 
-    public static  void printApproveDenyMenu(){
+    public static void printViewAccountMenu() {
+        System.out.println("******************************************");
+        System.out.println("Choose an Option Below. (1-3)");
+        System.out.println("Enter 1. View Account by Account ID");
+        System.out.println("Enter 2. View Accounts of Customer ID");
+        System.out.println("Enter 3. Back");
+    }
+
+    public static void printApproveDenyMenu() {
         System.out.println("Choose to Approve or Deny an Account (1-2)");
         System.out.println("Enter 1. Approve an Account");
         System.out.println("Enter 2. Deny an Account");
     }
 
-    public static void printApprovalMenu(){
+    public static void printApprovalMenu() {
         System.out.println("*****************************************");
         System.out.println("Use the options below to approve or deny accounts.");
-        System.out.println("Choose an option (1-5)");
+        System.out.println("Choose an option (1-4)");
         System.out.println("Enter 1. View Pending Accounts");
-        System.out.println("Enter 2. Approve Account By Account ID");
-        System.out.println("Enter 3. Logout");
+        System.out.println("Enter 2. Approve/Deny Account By Account ID");
+        System.out.println("Enter 3. Back");
         System.out.println("Enter 4. Exit");
     }
 
-    public static void printPendingAccounts(List<Account> accounts){
+    public static void printPendingAccounts(List<Account> accounts) {
         System.out.println("*****************************************");
-        if(accounts.size() == 0){
+        if (accounts.size() == 0) {
             System.out.println("There Are No Accounts Currently Pending Approval.");
         } else {
             System.out.println("Viewing Current Accounts Awaiting Approval...");
@@ -193,17 +245,21 @@ public class Menu {
         }
     }
 
-    public static void printInvalidLogin(){
-        System.out.println(redText + "Invalid login credentials" + normalText);
+    public static void printTransactionLog(List<Transaction> transactionLog) {
+        System.out.println(ANSI_CYAN + "-------------Transaction Log---------------------" + ANSI_NORMAL);
+        for (Transaction transaction : transactionLog) {
+            System.out.println(transaction);
+        }
+        System.out.println(ANSI_CYAN + "-------------------------------------------------" + ANSI_NORMAL);
     }
 
-    public static void greeting(String username){
-        System.out.println("Welcome " + username + "!");
+    public static void printInvalidLogin() {
+        System.out.println(ANSI_RED + "Invalid login credentials" + ANSI_NORMAL);
     }
 
-    public static void exit(){
-        System.out.println("Exiting...");
-        System.out.println("Bye!");
+    public static void exit() {
+        System.out.println(ANSI_CYAN + "Exiting...");
+        System.out.println("Bye!" + ANSI_NORMAL);
         System.exit(0);
     }
 }

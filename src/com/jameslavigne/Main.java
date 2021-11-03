@@ -9,20 +9,19 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+        final double MAX_MONEY_TRANSACTION = 100000;
+
         EmployeeDao empDao = EmployeeDaoFactory.getEmployeeDao();
         CustomerDao custDao = CustomerDaoFactory.getCustomerDao();
         TransactionDao tranDao = TransactionDaoFactory.getTransactionDao();
         AccountDao accDao = AccountDaoFactory.getAccountDao();
 
-        boolean browsingStart = true;
-        while (browsingStart) {
+        while (true) {
             Menu.printStartMenu();
 
             Customer customer;
-            Employee employee;
             String username;
             String password;
-            String name;
 
             int currentUserId;
 
@@ -37,66 +36,91 @@ public class Main {
 
 // ******************************* Employee Menus **************************************
                     if (empDao.validEmployeeLogin(username, password)) {
-                        //successful login as employee
-                        Menu.printEmployeeMenu(username);
-                        //get user choice
-                        switch (Menu.getMenuInput(5)) {
-                            case 1:
-                                //view accounts
-                                System.out.println("View Accounts");
-                                break;
-                            case 2:
-                                //approve or deny accounts
-                                boolean browsingAprroval = true;
-                                while (browsingAprroval) {
-                                    Menu.printApprovalMenu();
-                                    //get approval action choice
-                                    switch (Menu.getMenuInput(4)) {
+                        boolean browsingEmployeeMenu = true;
+                        while (browsingEmployeeMenu) {
+                            //successful login as employee
+                            Menu.printEmployeeMenu(username);
+                            //get user choice
+                            switch (Menu.getMenuInput(5)) {
+                                case 1:
+                                    //view accounts
+                                    Menu.printViewAccountMenu();
+                                    switch (Menu.getMenuInput(3)) {
                                         case 1:
-                                            //View Pending Accounts
-                                            List<Account> pendingAccounts = accDao.getPendingAccounts();
-                                            Menu.printPendingAccounts(pendingAccounts);
+                                            //View account by account id
+                                            int viewAccId = Menu.getAccIdInput();
+                                            Account viewableAccount = accDao.getAccountById(viewAccId);
+                                            Menu.viewAccount(viewableAccount);
                                             break;
                                         case 2:
-                                            //Approve/Deny Account By ID
-                                            Menu.printApproveDenyMenu();
-                                            int approvChoice = Menu.getMenuInput(2);
-                                            int pendingAccId = Menu.getIAccdInput();
-                                            if (approvChoice == 1) {
-                                                accDao.approveAccount(pendingAccId);
-                                            } else {
-                                                accDao.denyAccount(pendingAccId);
+                                            //View accounts owned by user id
+                                            int viewCustId = Menu.getAccIdInput();
+                                            List<Account> viewableAccounts = accDao.getAccountsByCustId(viewCustId);
+                                            for (Account account : viewableAccounts) {
+                                                Menu.viewAccount(account);
                                             }
                                             break;
                                         case 3:
-                                            //Logout (back to login menu)
-                                            browsingAprroval = false;
-                                            break;
-                                        case 4:
-                                            //Exit App
-                                            Menu.exit();
+                                            //go back
                                             break;
                                     }
-                                }
-                                break;
-                            case 3:
-                                //view transactions
-                                System.out.println("View Transaction Log");
-                                break;
-                            case 4:
-                                //go back to login screen
-                                System.out.println("Logging out...");
-                                break;
-                            case 5:
-                                //exit app
-                                Menu.exit();
+                                    break;
+                                case 2:
+                                    //approve or deny accounts
+                                    boolean browsingApproval = true;
+                                    while (browsingApproval) {
+                                        Menu.printApprovalMenu();
+                                        //get approval action choice
+                                        switch (Menu.getMenuInput(4)) {
+                                            case 1:
+                                                //View Pending Accounts
+                                                List<Account> pendingAccounts = accDao.getPendingAccounts();
+                                                Menu.printPendingAccounts(pendingAccounts);
+                                                break;
+                                            case 2:
+                                                //Approve/Deny Account By ID
+                                                Menu.printApproveDenyMenu();
+                                                int approvChoice = Menu.getMenuInput(2);
+                                                int pendingAccId = Menu.getAccIdInput();
+                                                if (approvChoice == 1) {
+                                                    accDao.approveAccount(pendingAccId);
+                                                } else {
+                                                    accDao.denyAccount(pendingAccId);
+                                                }
+                                                break;
+                                            case 3:
+                                                //Back (back to employee menu)
+                                                browsingApproval = false;
+                                                break;
+                                            case 4:
+                                                //Exit App
+                                                Menu.exit();
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    //view transactions
+                                    System.out.println("View Transaction Log");
+                                    List<Transaction> transactionLog = tranDao.getAllTransaction();
+                                    Menu.printTransactionLog(transactionLog);
+                                    break;
+                                case 4:
+                                    //go back to login screen
+                                    System.out.println("Logging out...");
+                                    browsingEmployeeMenu = false;
+                                    break;
+                                case 5:
+                                    //exit app
+                                    Menu.exit();
+                            }
                         }
 //******************************* Customer Menus *****************************************************
                     } else if (custDao.validCustomerLogin(username, password)) {
                         //successful login as customer
                         currentUserId = custDao.login(username);
                         boolean browsingCustMenu = true;
-                        while(browsingCustMenu) {
+                        while (browsingCustMenu) {
                             //get users accounts
                             List<Account> accounts = accDao.getAccountsByCustId(currentUserId);
                             Menu.printCustomerMenu(username, accounts);
@@ -107,13 +131,13 @@ public class Main {
                                 numAccounts = 0;
                             }
 
-                            //get user selection
+                            //get user selection (dynamic sized menu)
                             int customerMenuChoice = Menu.getMenuInput(numAccounts + 3);
                             if (customerMenuChoice > 0 && customerMenuChoice <= numAccounts) {
                                 //get account info of chosen account
                                 Account currAccount = accounts.get(customerMenuChoice - 1);
                                 int currAccId = currAccount.getAccId();
-                                if(currAccount.isApproved()) {
+                                if (currAccount.isApproved()) {
                                     boolean browsingAccountMenu = true;
                                     while (browsingAccountMenu) {
                                         //bank account menu
@@ -123,21 +147,79 @@ public class Main {
                                             case 1:
                                                 //Deposit
                                                 Menu.printDeposit();
-                                                double depositAmount = Menu.getMoneyAmount();
-                                                accDao.deposit( currAccId,depositAmount);
+                                                double depositAmount = Menu.getMoneyAmount(MAX_MONEY_TRANSACTION);
+                                                if (accDao.deposit(currAccId, depositAmount)) {
+                                                    //record transaction
+                                                    Transaction transaction = new Transaction();
+                                                    transaction.setSourceId(currAccId); //self deposit source
+                                                    transaction.setDestId(currAccId);
+                                                    transaction.setAmount(depositAmount);
+                                                    transaction.setPending(false);
+                                                    tranDao.addTransaction(transaction);
+                                                }
                                                 browsingAccountMenu = false;
                                                 break;
                                             case 2:
                                                 //Withdraw
                                                 Menu.printWithdraw();
-                                                double withdraw = Menu.getMoneyAmount();
+                                                double withdrawAmount = Menu.getMoneyAmount(currAccount.getBalance());
+                                                if (accDao.withdraw(currAccId, withdrawAmount)) {
+                                                    //record transaction
+                                                    Transaction transaction = new Transaction();
+                                                    transaction.setSourceId(currAccId); //self withdraw source
+                                                    transaction.setDestId(currAccId);
+                                                    transaction.setAmount(-withdrawAmount);
+                                                    transaction.setPending(false);
+                                                    tranDao.addTransaction(transaction);
+                                                }
                                                 browsingAccountMenu = false;
                                                 break;
                                             case 3:
-                                                //make transfer
+                                                //make transfer to another account
+                                                Menu.printCreateNewTransfer();
+                                                int transferDestId = Menu.getAccIdInput();
+                                                System.out.print("Enter an amount: $");
+                                                double transferAmount = Menu.getMoneyAmount(MAX_MONEY_TRANSACTION);
+                                                Transaction transaction = new Transaction();
+                                                transaction.setSourceId(currAccId); //self withdraw source
+                                                transaction.setDestId(transferDestId);
+                                                transaction.setAmount(transferAmount);
+                                                transaction.setPending(true);
+                                                tranDao.addTransaction(transaction);
+                                                browsingAccountMenu = false;
                                                 break;
                                             case 4:
                                                 //accept pending transfer request
+                                                List<Transaction> pendingTransactions;
+                                                pendingTransactions = tranDao.getPendingFromCustId(currAccId);
+                                                Menu.printPendingTransactions(pendingTransactions);
+                                                if (pendingTransactions.size() > 0) {
+                                                    //select pending transaction
+                                                    int transChoice = Menu.getMenuInput(pendingTransactions.size() + 1);
+                                                    Menu.printApprovedDenyChoice();
+                                                    int approveOrDeny = Menu.getMenuInput(2);
+                                                    Transaction selectedTrans = pendingTransactions.get(transChoice - 1);
+                                                    if (approveOrDeny == 1) {
+                                                        //approve transaction
+                                                        if (tranDao.approveTransaction(selectedTrans.getTranId())) {
+                                                            //transfer money
+                                                            if (accDao.transfer(selectedTrans.getSourceId(), selectedTrans.getDestId(), selectedTrans.getAmount())) {
+                                                                System.out.println("Transfer successful!");
+                                                                tranDao.deleteTransaction(selectedTrans.getTranId());
+                                                            } else {
+                                                                System.out.println("Transfer of money failed");
+                                                            }
+                                                        } else {
+                                                            System.out.println("Could Not Approve Transfer");
+                                                        }
+                                                    } else {
+                                                        //deny / delete transaction
+                                                        tranDao.deleteTransaction(selectedTrans.getTranId());
+                                                    }
+                                                } else {
+                                                    System.out.println(Menu.ANSI_CYAN + "No Pending Transfer Offer" + Menu.ANSI_NORMAL);
+                                                }
+                                                browsingAccountMenu = false;
                                                 break;
                                             case 5:
                                                 //Back to previous menu
@@ -174,7 +256,7 @@ public class Main {
                     }
                     break;
                 case 2:
-                    //Create account
+                    //Create user account
                     System.out.println("Create a new user account!");
                     customer = Menu.getInputCustomer();
                     custDao.addCustomer(customer);
@@ -182,8 +264,7 @@ public class Main {
 
                 case 3:
                     //Exit
-                    System.out.println("Exiting...");
-                    System.exit(0);
+                    Menu.exit();
                     break;
 
                 default:

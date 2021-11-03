@@ -11,9 +11,11 @@ public interface TransactionDao {
 
     Transaction getTransactionById(int id);
 
-    List<Transaction> getPendingFromAccId(int id);
+    List<Transaction> getPendingFromCustId(int id);
 
-    void updateTransactionById(int id, Transaction transaction);
+    List<Transaction> getAllTransaction();
+
+    boolean approveTransaction(int id);
 
     void deleteTransaction(int id);
 }

@@ -9,7 +9,8 @@ public class Customer {
     private String password;
     private String name;
 
-    public Customer(){}
+    public Customer() {
+    }
 
     public Customer(int custId, String username, String password, String name) {
         this.custId = custId;

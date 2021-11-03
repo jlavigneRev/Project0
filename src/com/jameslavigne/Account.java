@@ -9,7 +9,8 @@ public class Account {
     private double balance;
     private boolean approved;
 
-    public Account(){}
+    public Account() {
+    }
 
     public Account(int accId, int custId, double balance, boolean approved) {
         this.accId = accId;
