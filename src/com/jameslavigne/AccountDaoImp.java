@@ -99,6 +99,21 @@ public class AccountDaoImp implements AccountDao {
     }
 
     @Override
+    public double getBalance(int id) {
+        String sql = "SELECT (balance) FROM account WHERE acc_id = ? LIMIT 1";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet result = preparedStatement.executeQuery();
+            if(result.next())
+                return result.getDouble(1);
+        } catch (SQLException e) {
+            //e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
     public boolean deposit(int id, double amount) {
         String sql = "UPDATE account SET balance=balance + ? WHERE acc_id = ?";
         try {

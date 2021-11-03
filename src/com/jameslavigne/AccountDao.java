@@ -15,6 +15,8 @@ public interface AccountDao {
 
     List<Account> getPendingAccounts();
 
+    double getBalance(int id);
+
     boolean deposit(int id, double amount);
 
     boolean withdraw(int id, double amount);

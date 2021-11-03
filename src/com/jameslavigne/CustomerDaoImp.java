@@ -71,4 +71,18 @@ public class CustomerDaoImp implements CustomerDao {
         }
         return false;
     }
+
+    @Override
+    public boolean usernameTaken(String username) {
+        String sql = "SELECT * FROM customer WHERE username = ? LIMIT 1";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+            ResultSet result = preparedStatement.executeQuery();
+            return result.next();
+        } catch (SQLException e) {
+            //e.printStackTrace();
+        }
+        return false;
+    }
 }

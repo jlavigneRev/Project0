@@ -11,4 +11,5 @@ public interface CustomerDao {
 
     boolean validCustomerLogin(String username, String password);
 
+    boolean usernameTaken(String username);
 }

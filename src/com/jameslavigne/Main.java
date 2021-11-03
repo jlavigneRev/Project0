@@ -180,12 +180,16 @@ public class Main {
                                                 int transferDestId = Menu.getAccIdInput();
                                                 System.out.print("Enter an amount: $");
                                                 double transferAmount = Menu.getMoneyAmount(MAX_MONEY_TRANSACTION);
-                                                Transaction transaction = new Transaction();
-                                                transaction.setSourceId(currAccId); //self withdraw source
-                                                transaction.setDestId(transferDestId);
-                                                transaction.setAmount(transferAmount);
-                                                transaction.setPending(true);
-                                                tranDao.addTransaction(transaction);
+                                                if(transferAmount > currAccount.getBalance()){
+                                                    System.out.println(Menu.ANSI_RED + "Insufficient Funds for Transfer" + Menu.ANSI_NORMAL);
+                                                } else {
+                                                    Transaction transaction = new Transaction();
+                                                    transaction.setSourceId(currAccId); //self withdraw source
+                                                    transaction.setDestId(transferDestId);
+                                                    transaction.setAmount(transferAmount);
+                                                    transaction.setPending(true);
+                                                    tranDao.addTransaction(transaction);
+                                                }
                                                 browsingAccountMenu = false;
                                                 break;
                                             case 4:
@@ -200,17 +204,23 @@ public class Main {
                                                     int approveOrDeny = Menu.getMenuInput(2);
                                                     Transaction selectedTrans = pendingTransactions.get(transChoice - 1);
                                                     if (approveOrDeny == 1) {
-                                                        //approve transaction
-                                                        if (tranDao.approveTransaction(selectedTrans.getTranId())) {
-                                                            //transfer money
-                                                            if (accDao.transfer(selectedTrans.getSourceId(), selectedTrans.getDestId(), selectedTrans.getAmount())) {
-                                                                System.out.println("Transfer successful!");
-                                                                tranDao.deleteTransaction(selectedTrans.getTranId());
+                                                        //check src account has enough money
+                                                        if(accDao.getBalance(selectedTrans.getSourceId()) > selectedTrans.getAmount()) {
+                                                            //approve transaction
+                                                            if (tranDao.approveTransaction(selectedTrans.getTranId())) {
+                                                                //transfer money
+                                                                if (accDao.transfer(selectedTrans.getSourceId(), selectedTrans.getDestId(), selectedTrans.getAmount())) {
+                                                                    System.out.println("Transfer successful!");
+                                                                    tranDao.deleteTransaction(selectedTrans.getTranId());
+                                                                } else {
+                                                                    System.out.println("Transfer of money failed");
+                                                                }
                                                             } else {
-                                                                System.out.println("Transfer of money failed");
+                                                                System.out.println("Could Not Approve Transfer");
                                                             }
                                                         } else {
-                                                            System.out.println("Could Not Approve Transfer");
+                                                            //not enough money in source account
+                                                            System.out.println(Menu.ANSI_RED + "Source Account Missing Required Funds, Cannot Approve Transfer" + Menu.ANSI_NORMAL);
                                                         }
                                                     } else {
                                                         //deny / delete transaction
@@ -259,7 +269,11 @@ public class Main {
                     //Create user account
                     System.out.println("Create a new user account!");
                     customer = Menu.getInputCustomer();
-                    custDao.addCustomer(customer);
+                    boolean usernameTaken = custDao.usernameTaken(customer.getUsername());
+                    if(!usernameTaken)
+                        custDao.addCustomer(customer);
+                    else
+                        System.out.println(Menu.ANSI_RED + "Username already taken, please try again." + Menu.ANSI_NORMAL);
                     break;
 
                 case 3:

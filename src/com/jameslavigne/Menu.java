@@ -40,7 +40,7 @@ public class Menu {
             } catch (NumberFormatException e) {
                 //e.printStackTrace();
             }
-            System.out.println("Please, Enter a valid selection from (1-" + max + ")");
+            System.out.println(ANSI_RED + "Please, Enter a valid selection from (1-" + max + ")" + ANSI_NORMAL);
         }
     }
 
@@ -72,7 +72,7 @@ public class Menu {
                     return amount;
             } catch (NumberFormatException e) {
             }
-            System.out.println("Please Enter a Valid Amount.");
+            System.out.println(ANSI_RED + "Please Enter a Valid Amount." + ANSI_NORMAL);
         }
     }
 
@@ -86,7 +86,7 @@ public class Menu {
             } catch (NumberFormatException e) {
                 //e.printStackTrace();
             }
-            System.out.println("Please enter a valid ID number.");
+            System.out.println(ANSI_RED + "Please enter a valid ID number." + ANSI_NORMAL);
         }
     }
 
@@ -100,7 +100,7 @@ public class Menu {
             } catch (NumberFormatException e) {
                 //e.printStackTrace();
             }
-            System.out.println("Please enter a valid ID number.");
+            System.out.println(ANSI_RED + "Please enter a valid ID number." + ANSI_NORMAL);
         }
     }
 
@@ -134,7 +134,7 @@ public class Menu {
         System.out.println("Please choose an option listed below. (1-" + (listSize + 3) + "):");
         for (int i = 0; i < listSize; i++) {
             if (accounts.get(i).isApproved()) {
-                System.out.println("Enter " + (i + 1) + ". View Account ID #" + accounts.get(i).getAccId() + " - $" + accounts.get(i).getBalance());
+                System.out.println("Enter " + (i + 1) + ". View Account ID #" + accounts.get(i).getAccId() + " - $" + df.format(accounts.get(i).getBalance()));
             } else {
                 System.out.println(ANSI_YELLOW + "Enter " + (i + 1) + ". Account ID #" + accounts.get(i).getAccId() + " is waiting for approval" + ANSI_NORMAL);
             }
@@ -240,7 +240,7 @@ public class Menu {
         } else {
             System.out.println("Viewing Current Accounts Awaiting Approval...");
             for (Account account : accounts) {
-                System.out.println("Account ID #" + account.getAccId() + " - Owned by Customer ID #" + account.getCustId() + " - Starting Balance of $" + account.getBalance());
+                System.out.println(ANSI_CYAN + "Account ID #" + account.getAccId() + " - Owned by Customer ID #" + account.getCustId() + " - Starting Balance of $" + account.getBalance() + ANSI_NORMAL);
             }
         }
     }
