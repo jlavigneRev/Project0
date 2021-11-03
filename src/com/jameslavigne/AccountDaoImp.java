@@ -141,7 +141,7 @@ public class AccountDaoImp implements AccountDao {
             preparedStatement.setInt(2, id);
             int count = preparedStatement.executeUpdate();
             if (count > 0) {
-                System.out.println("Withdrew $" + Menu.df.format(amount) + " into Account ID #" + id);
+                System.out.println("Withdrew $" + Menu.df.format(amount) + " from Account ID #" + id);
                 return true;
             }
         } catch (SQLException e) {
